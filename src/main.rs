@@ -19,13 +19,14 @@ type TResult<T> = result::Result<T, TError>;
 type TError = Box<dyn error::Error>;
 
 //fn get_args() -> TResult<HashMap>{
-fn get_args() -> TResult<String>{
+//fn get_args(cmds:&mut HashMap<&str,i32>) -> TResult<HashMap<&str,i32>>{
+fn get_args<'a>(cmds:&'a mut HashMap<&str,i32>) -> TResult<HashMap<&'a str,i32>>{
     unimplemented!()
 }
 
 
 fn main() {
-let hash_result = hashmap!['A' => 0, 'C' => 0, 'G' => 0, 'T' => 0];
+//let hash_result = hashmap!['A' => 0, 'C' => 0, 'G' => 0, 'T' => 0];
     println!("Hello, world!");
 }
 
@@ -41,7 +42,9 @@ mod tests {
     #[test]
     fn test_get_args() {
         use crate::get_args;
-        let res = get_args();
+        use std::collections::HashMap;
+        let mut hash_result = hashmap!["A" => 0, "C" => 0, "G" => 0, "T" => 0];
+        let res = get_args(&mut hash_result);
         assert!(res.is_ok());
     }
 }

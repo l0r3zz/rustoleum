@@ -84,6 +84,14 @@ fn ran_fah(n:f64) -> f64 {
     n  + 459.67
 }
 
+
+
+fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
+    let factor = 10.0f64.powi(decimal_places as i32);
+    let a = (a * factor).trunc();
+    let b = (b * factor).trunc();
+    a == b
+}
 fn main() {
     let opts = Opt::from_args();
 //    let uom_in = opts.uom_in;
@@ -191,6 +199,6 @@ mod tests {
         let f = 70.0;
         let c = 21.11;
         let res = fah_cel(f);
-        approx_eq!(f64,res, c, ulps = 2);
+        assert!(approx_eq(res, c,2));
     }
 }

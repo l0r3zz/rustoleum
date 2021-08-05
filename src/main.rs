@@ -32,7 +32,57 @@ macro_rules! hashmap {
 
 //type TResult<T> = result::Result<T, TError>;
 //type TError = Box<dyn error::Error>;
+// function pointer type
+ type Measureop = fn(f64) -> f64;
 
+// kelvin to celsius conversion function
+fn kel_cel(n:f64) -> f64 {
+    n - 273.15
+}
+// kelvin to fahrenheit conversion function
+fn kel_fah(n:f64) -> f64 {
+    (n - 273.15) * 9.0/5.0 + 32.0
+}
+//kelvin to rankine conversion function
+fn kel_ran(n:f64) -> f64 {
+    n * 1.8
+}
+//celsius to kelvin conversion function
+fn cel_kel(n:f64) -> f64 {
+    n + 273.15
+}
+//celsius to fahrenheit conversion function
+fn cel_fah(n:f64) -> f64 {
+    (n * 9.0/5.0) + 32.0
+}
+//celsius to rankine conversion function
+fn cel_ran(n:f64) -> f64 {
+    (n * 9.0/5.0) + 491.67
+}
+//fahrenheit to kelvin conversion function
+fn fah_kel(n:f64) -> f64 {
+    (n - 32.0)* 9.0/5.0 + 273.15
+}
+//fahrenheit to celsius conversion function
+fn fah_cel(n:f64) -> f64 {
+    (n - 32.0)* 5.0/9.0
+}
+//fahrenheit to rankine conversion function
+fn fah_ran(n:f64) -> f64 {
+    n  + 459.67
+}
+//rankine to kelvin conversion function
+fn ran_kel(n:f64) -> f64 {
+    (n - 32.0)* 9.0/5.0 + 273.15
+}
+//rankine to celsius conversion function
+fn ran_cel(n:f64) -> f64 {
+    (n - 32.0)* 9.0/5.0
+}
+//rankine to fahrenheit conversion function
+fn ran_fah(n:f64) -> f64 {
+    n  + 459.67
+}
 
 fn main() {
     let opts = Opt::from_args();
@@ -47,45 +97,32 @@ fn main() {
         "answer" => opts.answer
     ];
 
-    // function pointer type
-    type Measureop = fn(f64) -> f64;
-
     // kelvin to celsius conversion function
-    fn kel_cel(n:f64) -> f64 {
-        n - 273.15
-    }
     let k2c: Measureop = kel_cel;
-
     // kelvin to fahrenheit conversion function
-    fn kel_fah(n:f64) -> f64 {
-        (n - 273.15) * 9.0/5.0 + 32.0
-    }
     let k2f: Measureop = kel_fah;
-
     //kelvin to rankine conversion function
-    fn kel_ran(n:f64) -> f64 {
-        n * 1.8
-    }
     let k2r: Measureop = kel_ran;
-
     //celsius to kelvin conversion function
-    fn cel_kel(n:f64) -> f64 {
-        n + 273.15
-    }
     let c2k: Measureop = cel_kel;
-
-
     //celsius to fahrenheit conversion function
-    fn cel_fah(n:f64) -> f64 {
-        (n * 9.0/5.0) + 32.0
-    }
     let c2f: Measureop = cel_fah;
-
     //celsius to rankine conversion function
-    fn cel_ran(n:f64) -> f64 {
-        (n * 9.0/5.0) + 491.67
-    }
     let c2r: Measureop = cel_ran;
+
+    //fahrenheit to kelvin conversion function
+    let f2k: Measureop = fah_kel;
+    //fahrenheit to rankine conversion function
+    let f2r: Measureop = fah_ran;
+    //fahrenheit to celsius conversion function
+    let f2c: Measureop = fah_cel;
+
+    //rankine to kelvin conversion function
+    let r2k: Measureop = ran_kel;
+    //rankine to celsius conversion function
+    let r2c: Measureop = ran_cel;
+    //rankine to fahrenheit conversion function
+    let r2f: Measureop = ran_fah;
 
     // conversion maps
     let kelvin_map = hashmap![
@@ -101,16 +138,18 @@ fn main() {
     ];
 
     let fahrenheit_map = hashmap![
-        "CELSIUS" => k2c,
-        "FAHRENHEIT" => k2f,
-        "RANKINE" => k2r
+        "CELSIUS" => f2c,
+        "KELVINE" => f2k,
+        "RANKINE" => f2r
     ];
 
     let rankine_map = hashmap![
-        "CELSIUS" => k2c,
-        "FAHRENHEIT" => k2f,
-        "RANKINE" => k2r
+        "CELSIUS" => r2c,
+        "FAHRENHEIT" => r2f,
+        "KELVINE" => r2k
     ];
+
+
 
     // Main conversion dispatch table
     let cvnmap = hashmap![
@@ -137,6 +176,8 @@ fn main() {
 // Unit test go here
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use float_cmp::*;
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
@@ -144,6 +185,12 @@ mod tests {
     #[test]
     fn test_output_result(){
         assert!(false);
-
+    }
+    #[test]
+    fn test_fah_cel() {
+        let f = 70.0;
+        let c = 21.11;
+        let res = fah_cel(f);
+        approx_eq!(f64,res, c, ulps = 2);
     }
 }

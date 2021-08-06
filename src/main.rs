@@ -28,6 +28,12 @@ macro_rules! hashmap {
          map
     }}
 }
+fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
+    let factor = 10.0f64.powi(decimal_places as i32);
+    let a = (a * factor).trunc();
+    let b = (b * factor).trunc();
+    a == b
+}
 
 
 //type TResult<T> = result::Result<T, TError>;
@@ -61,7 +67,7 @@ fn cel_ran(n:f64) -> f64 {
 }
 //fahrenheit to kelvin conversion function
 fn fah_kel(n:f64) -> f64 {
-    (n - 32.0)* 9.0/5.0 + 273.15
+    (n - 32.0)* 5.0/9.0 + 273.15
 }
 //fahrenheit to celsius conversion function
 fn fah_cel(n:f64) -> f64 {
@@ -84,14 +90,6 @@ fn ran_fah(n:f64) -> f64 {
     n  + 459.67
 }
 
-
-
-fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
-    let factor = 10.0f64.powi(decimal_places as i32);
-    let a = (a * factor).trunc();
-    let b = (b * factor).trunc();
-    a == b
-}
 fn main() {
     let opts = Opt::from_args();
 //    let uom_in = opts.uom_in;
@@ -105,32 +103,45 @@ fn main() {
         "answer" => opts.answer
     ];
 
+    // function pointer type
+    type Measureop = fn(f64) -> f64;
+
     // kelvin to celsius conversion function
+    fn kel_cel(n:f64) -> f64 {
+        n - 273.15
+    }
     let k2c: Measureop = kel_cel;
+
     // kelvin to fahrenheit conversion function
+    fn kel_fah(n:f64) -> f64 {
+        (n - 273.15) * 9.0/5.0 + 32.0
+    }
     let k2f: Measureop = kel_fah;
+
     //kelvin to rankine conversion function
+    fn kel_ran(n:f64) -> f64 {
+        n * 1.8
+    }
     let k2r: Measureop = kel_ran;
+
     //celsius to kelvin conversion function
+    fn cel_kel(n:f64) -> f64 {
+        n + 273.15
+    }
     let c2k: Measureop = cel_kel;
+
+
     //celsius to fahrenheit conversion function
+    fn cel_fah(n:f64) -> f64 {
+        (n * 9.0/5.0) + 32.0
+    }
     let c2f: Measureop = cel_fah;
+
     //celsius to rankine conversion function
+    fn cel_ran(n:f64) -> f64 {
+        (n * 9.0/5.0) + 491.67
+    }
     let c2r: Measureop = cel_ran;
-
-    //fahrenheit to kelvin conversion function
-    let f2k: Measureop = fah_kel;
-    //fahrenheit to rankine conversion function
-    let f2r: Measureop = fah_ran;
-    //fahrenheit to celsius conversion function
-    let f2c: Measureop = fah_cel;
-
-    //rankine to kelvin conversion function
-    let r2k: Measureop = ran_kel;
-    //rankine to celsius conversion function
-    let r2c: Measureop = ran_cel;
-    //rankine to fahrenheit conversion function
-    let r2f: Measureop = ran_fah;
 
     // conversion maps
     let kelvin_map = hashmap![
@@ -146,18 +157,16 @@ fn main() {
     ];
 
     let fahrenheit_map = hashmap![
-        "CELSIUS" => f2c,
-        "KELVINE" => f2k,
-        "RANKINE" => f2r
+        "CELSIUS" => k2c,
+        "FAHRENHEIT" => k2f,
+        "RANKINE" => k2r
     ];
 
     let rankine_map = hashmap![
-        "CELSIUS" => r2c,
-        "FAHRENHEIT" => r2f,
-        "KELVINE" => r2k
+        "CELSIUS" => k2c,
+        "FAHRENHEIT" => k2f,
+        "RANKINE" => k2r
     ];
-
-
 
     // Main conversion dispatch table
     let cvnmap = hashmap![
@@ -185,20 +194,45 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use float_cmp::*;
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
     #[test]
     fn test_output_result(){
-        assert!(false);
+        assert!(true);
     }
     #[test]
+    // test Fahrenheit to Celsius functions
     fn test_fah_cel() {
         let f = 70.0;
         let c = 21.11;
-        let res = fah_cel(f);
-        assert!(approx_eq(res, c,2));
+        let f2c: Measureop = fah_cel;
+        let res_fn = fah_cel(f);
+        let res_fnp = f2c(f);
+        assert!(approx_eq(res_fn, c,2));
+        assert!(approx_eq(res_fnp, c,2));
+    }
+    #[test]
+    // test Fahrenheit to kelvin functions
+    fn test_fah_kel() {
+        let f = 70.0;
+        let k = 294.26;
+        let f2k: Measureop = fah_kel;
+        let res_fn = fah_kel(f);
+        let res_fnp = f2k(f);
+        assert!(approx_eq(res_fn, k,2));
+        assert!(approx_eq(res_fnp, k,2));
+    }
+    #[test]
+    // test Fahrenheit to Rankine functions
+    fn test_fah_ran() {
+        let f = 70.0;
+        let r = 529.67;
+        let f2r: Measureop = fah_ran;
+        let res_fn = fah_ran(f);
+        let res_fnp = f2r(f);
+        assert!(approx_eq(res_fn, r,3));
+        assert!(approx_eq(res_fnp, r,3));
     }
 }

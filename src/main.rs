@@ -118,10 +118,25 @@ fn lit_gal(n:f64) -> f64 {
 }
 
 // tablespoons to liters conversion function
+fn tab_lit(n:f64) -> f64 {
+    n  * 0.0147
+}
 // tablespoons to cubic-inches conversion function
+fn tab_ci(n:f64) -> f64 {
+    n  * 0.902
+}
 // tablespoons to cups conversion function
+fn tab_cups(n:f64) -> f64 {
+    n  * 0.062
+}
 // tablespoons to cubic-feet conversion function
+fn tab_cf(n:f64) -> f64 {
+   n  * 0.00052219
+}
 // tablespoons to gallons conversion function
+fn tab_gal(n:f64) -> f64 {
+   n  * 0.00390625
+}
 
 // cubic-inches to liters conversion function
 // cubic-inches to tablespoons conversion function
@@ -202,7 +217,6 @@ fn main() {
     let r2k: Measureop = ran_kel;
 
 
-
     //liter to tablespoon conversion function
     let l2t: Measureop = lit_tab;
     //liter to cubic-inches conversion function
@@ -213,6 +227,17 @@ fn main() {
     let l2cf: Measureop = lit_cf;
     //liter to gallons conversion function
     let l2g: Measureop = lit_gal;
+
+    //tablespoons to liters conversion function
+    let t2l: Measureop = tab_lit;
+    //tablespoons to cubic-inches conversion function
+    let t2ci: Measureop = tab_ci;
+    //tablespoons to cups conversion function
+    let t2cps: Measureop = tab_cups;
+    //tablespoons to cubic-feet conversion function
+    let t2cf: Measureop = tab_cf;
+    //tablespoons to gallons conversion function
+    let t2g: Measureop = tab_gal;
 
 
 
@@ -249,14 +274,22 @@ fn main() {
         "GALLONS" => l2g
     ];
 
+    let tablespoons_map = hashmap![
+        "LITERS" => t2l,
+        "CUBIC-INCHES" => t2ci,
+        "CUBIC-FEET" => t2cf,
+        "CUPS" => t2cps,
+        "GALLONS" => t2g
+    ];
+
     // Main conversion dispatch table
     let cvnmap = hashmap![
         "KELVIN" => kelvin_map,
         "CELSIUS" => celsius_map,
         "FAHRENHEIT" => fahrenheit_map,
         "RANKINE" => rankine_map,
-        "LITERS" => liters_map
-//        "TABLESPOONS" => 0,
+        "LITERS" => liters_map,
+        "TABLESPOONS" => tablespoons_map
 //        "CUBIC-INCHES" => 0,
 //        "CUPS" => 0,
 //        "CUBIC-FEET" => 0,

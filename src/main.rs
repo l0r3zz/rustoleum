@@ -107,41 +107,40 @@ fn main() {
     type Measureop = fn(f64) -> f64;
 
     // kelvin to celsius conversion function
-    fn kel_cel(n:f64) -> f64 {
-        n - 273.15
-    }
     let k2c: Measureop = kel_cel;
 
     // kelvin to fahrenheit conversion function
-    fn kel_fah(n:f64) -> f64 {
-        (n - 273.15) * 9.0/5.0 + 32.0
-    }
     let k2f: Measureop = kel_fah;
 
     //kelvin to rankine conversion function
-    fn kel_ran(n:f64) -> f64 {
-        n * 1.8
-    }
     let k2r: Measureop = kel_ran;
 
     //celsius to kelvin conversion function
-    fn cel_kel(n:f64) -> f64 {
-        n + 273.15
-    }
     let c2k: Measureop = cel_kel;
 
-
     //celsius to fahrenheit conversion function
-    fn cel_fah(n:f64) -> f64 {
-        (n * 9.0/5.0) + 32.0
-    }
     let c2f: Measureop = cel_fah;
 
     //celsius to rankine conversion function
-    fn cel_ran(n:f64) -> f64 {
-        (n * 9.0/5.0) + 491.67
-    }
     let c2r: Measureop = cel_ran;
+
+    //fahrenheit to rankine conversion function
+    let f2r: Measureop = fah_ran;
+
+    //fahrenheit to celsius conversion function
+    let f2c: Measureop = fah_cel;
+
+    //fahrenheit to kelvin conversion function
+    let f2k: Measureop = fah_kel;
+
+    //rankin to fahrenheit conversion function
+    let r2f: Measureop = ran_fah;
+
+    //rankin to celsius conversion function
+    let r2c: Measureop = ran_cel;
+
+    //rankin to kelvin conversion function
+    let r2k: Measureop = ran_kel;
 
     // conversion maps
     let kelvin_map = hashmap![
@@ -157,15 +156,15 @@ fn main() {
     ];
 
     let fahrenheit_map = hashmap![
-        "CELSIUS" => k2c,
-        "FAHRENHEIT" => k2f,
-        "RANKINE" => k2r
+        "CELSIUS" => f2c,
+        "KELVIN" => f2k,
+        "RANKINE" => f2r
     ];
 
     let rankine_map = hashmap![
-        "CELSIUS" => k2c,
-        "FAHRENHEIT" => k2f,
-        "RANKINE" => k2r
+        "CELSIUS" => r2c,
+        "FAHRENHEIT" => r2f,
+        "KELVIN" => r2k
     ];
 
     // Main conversion dispatch table
@@ -181,11 +180,38 @@ fn main() {
 //        "CUBIC-FEET" => 0,
 //        "GALLONS" => 0
     ];
+
     println!("Value for uom_in: {}", args_ctx["uom_in"]);
     println!("Value for uom_target: {}",args_ctx["uom_target"]);
     println!("Value for control: {}", args_ctx["control"]);
     println!("Value for answer: {}", args_ctx["answer"]);
-    println!("Hello, world!");
+    match cvnmap.get(&*args_ctx["uom_in"]){
+        Some(value) => {
+            match value.get(&*args_ctx["uom_target"]){
+                Some(r) => {
+                    let cntrf64 = match  args_ctx["control"].parse::<f64>() {
+                        Ok(result) => result,
+                        Err(err) => {println!("Answer: invalid");return() }
+                    };
+                    let ansf64 = match  args_ctx["answer"].parse::<f64>() {
+                        Ok(result) => result,
+                        Err(err) => {println!("Answer: invalid");return() }
+                    };
+                    if approx_eq(r(cntrf64), ansf64,2){
+                    println!("Answer: {}","correct");
+                    }else {
+                    println!("Answer: {}","incorrect");
+                    }
+                }
+                None => {
+                    println!("Answer: {}","invalid");
+                }
+            }
+        }
+        None => {
+            println!("Answer: {}","invalid");
+        }
+    }
 }
 
 

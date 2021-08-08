@@ -1,9 +1,9 @@
-use std::{error, result};
 use std::collections::HashMap;
 use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 #[structopt(name = "rustoleum", author="geoffw")]
 
+// Struct that containes the argument parsing parameters
 struct Opt {
     /// this argument holds the unit of measurement of the input value
     #[structopt(short = "i", long = "uom_in", default_value = "fahrenheit")]
@@ -18,7 +18,6 @@ struct Opt {
 }
 
 //#[derive(debug)]
-//    for arg in env::args()
 
 // macro to make hasmap initialization easy
 macro_rules! hashmap {
@@ -28,6 +27,9 @@ macro_rules! hashmap {
          map
     }}
 }
+
+// Function to asertain approximate equality of f64 numbers up to specified
+// decimal places
 fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
     let factor = 10.0f64.powi(decimal_places as i32);
     let a = (a * factor).trunc();
@@ -36,11 +38,13 @@ fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
 }
 
 
-//type TResult<T> = result::Result<T, TError>;
-//type TError = Box<dyn error::Error>;
-// function pointer type
+// define a function pointer type
  type Measureop = fn(f64) -> f64;
 
+// List of conversion functions for all supported metrics
+
+// Temperature conversions
+// ----------------------------------------
 // kelvin to celsius conversion function
 fn kel_cel(n:f64) -> f64 {
     n - 273.15
@@ -89,6 +93,61 @@ fn ran_cel(n:f64) -> f64 {
 fn ran_fah(n:f64) -> f64 {
     n  + 459.67
 }
+
+// Volume conversions
+// ----------------------------------------
+// liters to tablespoon conversion function
+fn lit_tab(n:f64) -> f64 {
+    n  * 67.628
+}
+// liters to cubic-inches conversion function
+fn lit_ci(n:f64) -> f64 {
+    n  * 61.023
+}
+// liters to cups conversion function
+fn lit_cups(n:f64) -> f64 {
+    n  * 4.226
+}
+// liters to cubic-feet conversion function
+fn lit_cf(n:f64) -> f64 {
+   n  * 0.0353
+}
+// liters to gallons conversion function
+fn lit_gal(n:f64) -> f64 {
+   n  * 0.2641
+}
+
+// tablespoons to liters conversion function
+// tablespoons to cubic-inches conversion function
+// tablespoons to cups conversion function
+// tablespoons to cubic-feet conversion function
+// tablespoons to gallons conversion function
+
+// cubic-inches to liters conversion function
+// cubic-inches to tablespoons conversion function
+// cubic-inches to cups conversion function
+// cubic-inches to cubic-feet conversion function
+// cubic-inches to gallons conversion function
+
+// cups to liters conversion function
+// cups to cubic-inches conversion function
+// cups to tablespoons conversion function
+// cups to cubic-feet conversion function
+// cups to gallons conversion function
+
+// cubic-feet to liters conversion function
+// cubic-feet to cubic-inches conversion function
+// cubic-feet to tablespoons conversion function
+// cubic-feet to cups conversion function
+// cubic-feet to gallons conversion function
+
+// gallons to liters conversion function
+// gallons to cubic-inches conversion function
+// gallons to tablespoons conversion function
+// gallons to cubic-feet conversion function
+// gallons to cups conversion function
+
+
 
 fn main() {
     let opts = Opt::from_args();
@@ -142,6 +201,21 @@ fn main() {
     //rankin to kelvin conversion function
     let r2k: Measureop = ran_kel;
 
+
+
+    //liter to tablespoon conversion function
+    let l2t: Measureop = lit_tab;
+    //liter to cubic-inches conversion function
+    let l2ci: Measureop = lit_ci;
+    //liter to cups conversion function
+    let l2cps: Measureop = lit_cups;
+    //liter to cubic-feet conversion function
+    let l2cf: Measureop = lit_cf;
+    //liter to gallons conversion function
+    let l2g: Measureop = lit_gal;
+
+
+
     // conversion maps
     let kelvin_map = hashmap![
         "CELSIUS" => k2c,
@@ -167,13 +241,21 @@ fn main() {
         "KELVIN" => r2k
     ];
 
+    let liters_map = hashmap![
+        "TABLESPOONS" => l2t,
+        "CUBIC-INCHES" => l2ci,
+        "CUBIC-FEET" => l2cf,
+        "CUPS" => l2cps,
+        "GALLONS" => l2g
+    ];
+
     // Main conversion dispatch table
     let cvnmap = hashmap![
         "KELVIN" => kelvin_map,
         "CELSIUS" => celsius_map,
         "FAHRENHEIT" => fahrenheit_map,
-        "RANKINE" => rankine_map
-//        "LITERS" => 0,
+        "RANKINE" => rankine_map,
+        "LITERS" => liters_map
 //        "TABLESPOONS" => 0,
 //        "CUBIC-INCHES" => 0,
 //        "CUPS" => 0,

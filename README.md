@@ -16,13 +16,14 @@ considered **correct**, the student’s response must match an authoritative ans
 student’s response and authoritative answer are rounded to the *tenths* place.
 
 ## Installation
+The image resides on dockerhub.com 
 ```
-l0r3zz@tarnover:[2021-08-08 12:26:07]-$ docker pull l0r3zz/rustoleum:main-7316798
+l0r3zz@tarnover$ docker pull  l0r3zz/rustoleum:latest
 ```
 ## Usage
 
 ```
-l0r3zz@tarnover:[2021-08-08 12:26:07]-$ docker run  7d3409a7b05f
+l0r3zz@tarnover$ docker run  l0r3zz/rustoleum:latest rustoleum
 error: The following required arguments were not provided:
     <control>
     <answer>
@@ -30,7 +31,7 @@ error: The following required arguments were not provided:
 USAGE:
     rustoleum <control> <answer> --uom_in <uom-in> --uom_target <uom-target>
     
-l0r3zz@tarnover:[2021-08-08 12:26:07]-$ docker run 7d3409a7b05f rustoleum 70.0 343.15 --uom_in celsius -t kelvin
+l0r3zz@tarnover$ ddocker run  l0r3zz/rustoleum:latest rustoleum 70.0 343.15 --uom_in celsius -t kelvin
 Value for uom_in: CELSIUS
 Value for uom_target: KELVIN
 Value for control: 70.0

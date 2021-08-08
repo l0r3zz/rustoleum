@@ -139,10 +139,30 @@ fn tab_gal(n:f64) -> f64 {
 }
 
 // cubic-inches to liters conversion function
-// cubic-inches to tablespoons conversion function
+fn ci_lit(n:f64) -> f64 {
+   n  * 0.0163
+}
+
+// cubic-inches to 0.000578704tablespoons conversion function
+fn ci_tab(n:f64) -> f64 {
+   n  * 1.10823
+}
+
 // cubic-inches to cups conversion function
+fn ci_cups(n:f64) -> f64 {
+   n  * 0.06926
+}
+
 // cubic-inches to cubic-feet conversion function
+fn ci_cf(n:f64) -> f64 {
+   n  * 0.000578704
+}
+
 // cubic-inches to gallons conversion function
+fn ci_gal(n:f64) -> f64 {
+   n  * 0.004329
+}
+
 
 // cups to liters conversion function
 // cups to cubic-inches conversion function
@@ -151,10 +171,30 @@ fn tab_gal(n:f64) -> f64 {
 // cups to gallons conversion function
 
 // cubic-feet to liters conversion function
+fn cf_lit(n:f64) -> f64 {
+   n  * 28.3168
+}
+
 // cubic-feet to cubic-inches conversion function
+fn cf_ci(n:f64) -> f64 {
+   n  * 1728.0
+}
+
 // cubic-feet to tablespoons conversion function
+fn cf_tab(n:f64) -> f64 {
+   n  * 1915.01
+}
+
 // cubic-feet to cups conversion function
+fn cf_cups(n:f64) -> f64 {
+   n  * 119.688
+}
+
 // cubic-feet to gallons conversion function
+fn cf_gal(n:f64) -> f64 {
+   n  * 7.48052
+}
+
 
 // gallons to liters conversion function
 // gallons to cubic-inches conversion function
@@ -240,6 +280,30 @@ fn main() {
     let t2g: Measureop = tab_gal;
 
 
+    //cubic-inches to liters conversion function
+    let ci2l: Measureop = ci_lit;
+    //cubic-inches to tablespoons conversion function
+    let ci2t: Measureop = ci_tab;
+    //cubic-inches to cups conversion function
+    let ci2cps: Measureop = ci_cups;
+    //cubic-inches to cubic-feet conversion function
+    let ci2cf: Measureop = ci_cf;
+    //cubic-inches to gallons conversion function
+    let ci2g: Measureop = ci_gal;
+
+
+    //cubic-feet to liters conversion function
+    let cf2l: Measureop = cf_lit;
+    //cubic-feet to tablespoons conversion function
+    let cf2t: Measureop = cf_tab;
+    //cubic-feet to cups conversion function
+    let cf2cps: Measureop = cf_cups;
+    //cubic-feet to cubic-inches conversion function
+    let cf2ci: Measureop = cf_ci;
+    //cubic-feet to gallons conversion function
+    let cf2g: Measureop = cf_gal;
+
+
 
     // conversion maps
     let kelvin_map = hashmap![
@@ -282,6 +346,24 @@ fn main() {
         "GALLONS" => t2g
     ];
 
+
+    let cubic_feet_map = hashmap![
+        "LITERS" => cf2l,
+        "CUBIC-INCHES" => cf2ci,
+        "TABLESPOONS" => cf2t,
+        "CUPS" => cf2cps,
+        "GALLONS" => cf2g
+    ];
+
+
+    let cubic_inches_map = hashmap![
+        "LITERS" => ci2l,
+        "CUBIC-INCHES" => ci2cf,
+        "TABLESPOONS" => ci2t,
+        "CUPS" => ci2cps,
+        "GALLONS" => ci2g
+    ];
+
     // Main conversion dispatch table
     let cvnmap = hashmap![
         "KELVIN" => kelvin_map,
@@ -289,10 +371,10 @@ fn main() {
         "FAHRENHEIT" => fahrenheit_map,
         "RANKINE" => rankine_map,
         "LITERS" => liters_map,
-        "TABLESPOONS" => tablespoons_map
-//        "CUBIC-INCHES" => 0,
+        "TABLESPOONS" => tablespoons_map,
+        "CUBIC-INCHES" => cubic_inches_map,
 //        "CUPS" => 0,
-//        "CUBIC-FEET" => 0,
+        "CUBIC-FEET" => cubic_feet_map
 //        "GALLONS" => 0
     ];
 
@@ -306,11 +388,11 @@ fn main() {
                 Some(r) => {
                     let cntrf64 = match  args_ctx["control"].parse::<f64>() {
                         Ok(result) => result,
-                        Err(err) => {println!("Answer: invalid");return() }
+                        Err(_err) => {println!("Answer: invalid");return() }
                     };
                     let ansf64 = match  args_ctx["answer"].parse::<f64>() {
                         Ok(result) => result,
-                        Err(err) => {println!("Answer: invalid");return() }
+                        Err(_err) => {println!("Answer: invalid");return() }
                     };
                     if approx_eq(r(cntrf64), ansf64,2){
                     println!("Answer: {}","correct");

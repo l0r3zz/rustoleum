@@ -37,6 +37,8 @@ fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
     a == b
 }
 
+ // function pointer type
+ type Measureop = fn(f64) -> f64;
 
 // List of conversion functions for all supported metrics
 
@@ -233,8 +235,6 @@ fn main() {
         "answer" => opts.answer
     ];
 
-    // function pointer type
-    type Measureop = fn(f64) -> f64;
 
     // kelvin to celsius conversion function
     let k2c: Measureop = kel_cel;

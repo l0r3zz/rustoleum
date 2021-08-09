@@ -66,7 +66,6 @@ Answer: incorrect
 ## Planned enhancements
 1. Build out more comprehensive test coverage 
 2. Refactor the code so that the `<control>` and `<answer>` values can be entered at the end of the command line (speeds up usage)
-3. Refactor so that the verbose information is behind a *--verbose* flag.  In other words output would just be *correct* , *incorrect*, or *invalid*
 3. Emit JSON output to stdout and accept JSON input to stdin so the tool can be used in automation or via webhook
-5. Add additional conversion pairs
-6. Create a web based solution using REACT with this artifact as a core
+4. Add additional conversion pairs
+5. Create a web based solution using REACT with this artifact as a core

@@ -10,6 +10,7 @@ struct Opt {
     /// this argument holds the unit of measurement of the input value
     #[structopt(short = "i", long = "uom_in", default_value = "fahrenheit")]
     uom_in: String,
+    /// Flip this v switch for verbose output
     #[structopt(short = "v", long = "verbose")]
     verbose: bool,
     /// this argument holds the unit of measurement of the target value

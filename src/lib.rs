@@ -200,10 +200,12 @@ mod tests {
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
+
     #[test]
-    fn test_output_result(){
-        assert!(true);
+    fn test_approx_eq() {
+        assert!( approx_eq(9.0/11.0, 0.8182,2));
     }
+
     #[test]
     // test Fahrenheit to Celsius functions
     fn test_fah_cel() {

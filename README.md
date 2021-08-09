@@ -31,7 +31,7 @@ error: The following required arguments were not provided:
 USAGE:
     rustoleum <control> <answer> --uom_in <uom-in> --uom_target <uom-target>
     
-l0r3zz@tarnover$ ddocker run  l0r3zz/rustoleum:latest rustoleum 70.0 343.15 --uom_in celsius -t kelvin
+l0r3zz@tarnover$ ddocker run  l0r3zz/rustoleum:latest rustoleum 70.0 343.15 --uom_in celsius -t kelvin -v
 Value for uom_in: CELSIUS
 Value for uom_target: KELVIN
 Value for control: 70.0
@@ -43,10 +43,11 @@ Where:
 * `<answer>` the student supplied answer to the problem
 *  `--uom_in <uom_in>` the option tag followed by the accepted named unit of measure to be converted
 *  `--uom_target <uom_target>` the option tag followed by the target accepted unit of measure
+*  `-v` set this flag for verbosity
 
 Examples:
 ```
-l0r3zz@tarnover$ rustoleum 70.0 343.15 --uom_in celsius -t kelvin
+l0r3zz@tarnover$ rustoleum 70.0 343.15 --uom_in celsius -t kelvin -v
 Value for uom_in: CELSIUS
 Value for uom_target: KELVIN
 Value for control: 70.0
@@ -54,7 +55,7 @@ Value for answer: 343.15
 Answer: correct
 ```
 ```
-l0r3zz@tarnover$ rustoleum 70.0 21.0 --uom_in fahrenheit -t celsius
+l0r3zz@tarnover$ rustoleum 70.0 21.0 --uom_in fahrenheit -t celsius -v
 Value for uom_in: FAHRENHEIT
 Value for uom_target: CELSIUS
 Value for control: 70.0

@@ -1,8 +1,6 @@
 use std::collections::HashMap;
-
 extern crate argparse;
 use argparse::{ArgumentParser, StoreTrue, Store};
-
 use rustoleum::*;
 
 
@@ -30,10 +28,10 @@ fn main() {
         ap.set_description("learn measure conversions tool.");
         ap.refer(&mut control)
             .add_argument("control", Store,
-            "input value to convert").required();
+            "input value to convert");
         ap.refer(&mut answer)
             .add_argument("answer", Store,
-            "student provided answer to evaluate").required();
+            "student provided answer to evaluate");
         ap.refer(&mut verbose)
             .add_option(&["-v", "--verbose"], StoreTrue,
             "Be verbose");
@@ -245,7 +243,7 @@ fn main() {
     //  Probe the cvnmap hashmap for the provided "uom_in" value, if not found
     //  return "invalid", if found hash into the value returned (which is a hashmap)
     //  with the provided "uom_target" as a key. If the key is found, apply the "control"
-    //  argument to the dereferenced function pointer and compare the delivered f64 value 
+    //  argument to the dereferenced function pointer and compare the delivered f64 value
     //  with the provided "answer" if they are approximately equal return correct otherwise
     //  return incorrect. If either "control" or "answer" do not parse to f64 types, return
     //  invalid

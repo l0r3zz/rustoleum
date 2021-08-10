@@ -1,26 +1,10 @@
 use std::collections::HashMap;
-use structopt::StructOpt;
+
+extern crate argparse;
+use argparse::{ArgumentParser, StoreTrue, Store};
+
 use rustoleum::*;
 
-#[derive(StructOpt, Debug)]
-#[structopt(name = "rustoleum", author="geoffw")]
-
-// Struct that containes the argument parsing parameters
-struct Opt {
-    /// this argument holds the unit of measurement of the input value
-    #[structopt(short = "i", long = "uom_in", default_value = "fahrenheit")]
-    uom_in: String,
-    /// Flip this v switch for verbose output
-    #[structopt(short = "v", long = "verbose")]
-    verbose: bool,
-    /// this argument holds the unit of measurement of the target value
-    #[structopt(short = "t", long = "uom_target", default_value = "celsius")]
-    uom_target: String,
-    /// The proctor control input
-    control: String,
-    /// The student answer
-    answer: String,
-}
 
 // macro to make hasmap initialization easy
 macro_rules! hashmap {
@@ -32,21 +16,46 @@ macro_rules! hashmap {
 }
 
  // function pointer type
- type Measureop = fn(f64) -> f64;
+type Measureop = fn(f64) -> f64;
 
 fn main() {
-    let opts = Opt::from_args();
-//    let uom_in = opts.uom_in;
-//    let uom_target = opts.uom_target;
-//    let control = opts.control;
-//    let answer = opts.answer;
+
+    let mut verbose = false;
+    let mut uom_in = "".to_string();
+    let mut uom_target = "".to_string();
+    let mut control = "".to_string();
+    let mut answer = "".to_string();
+    {  // this block limits scope of borrows by ap.refer() method
+        let mut ap = ArgumentParser::new();
+        ap.set_description("learn measure conversions tool.");
+        ap.refer(&mut control)
+            .add_argument("control", Store,
+            "input value to convert").required();
+        ap.refer(&mut answer)
+            .add_argument("answer", Store,
+            "student provided answer to evaluate").required();
+        ap.refer(&mut verbose)
+            .add_option(&["-v", "--verbose"], StoreTrue,
+            "Be verbose");
+        ap.refer(&mut uom_in)
+            .add_option(&["-i","--uom_in"], Store,
+            "unit of measure to be converted").required();
+        ap.refer(&mut uom_target)
+            .add_option(&["-t","--target"], Store,
+            "unit of measure to of the answer").required();
+        ap.parse_args_or_exit();
+    }
+
+    // create a hashmap to contain the argument values
     let args_ctx = hashmap![
-        "uom_in" => opts.uom_in.to_ascii_uppercase(),
-        "uom_target" => opts.uom_target.to_ascii_uppercase(),
-        "control" => opts.control,
-        "answer" => opts.answer
+        "uom_in" => uom_in.to_ascii_uppercase(),
+        "uom_target" => uom_target.to_ascii_uppercase(),
+        "control" => control,
+        "answer" => answer
     ];
 
+
+    // Created function pointers which will go into the second level hashmaps
 
     // kelvin to celsius conversion function
     let k2c: Measureop = kel_cel;
@@ -133,7 +142,9 @@ fn main() {
     //gallons to cups conversion function
     let g2cps: Measureop = gal_cups;
 
-    // conversion maps
+    // These are the second level hashmaps that are values 
+    // for the keys of the first level hashmaps.
+    // The first level hasmap keys are the "uom_in" value
     let kelvin_map = hashmap![
         "CELSIUS" => k2c,
         "FAHRENHEIT" => k2f,
@@ -207,6 +218,8 @@ fn main() {
     ];
 
     // Main conversion dispatch table
+    // This is the top level conversion table, if there is a hash "hit"
+    // that gurentees that the input Unit of Measure (uom_in) is valid
     let cvnmap = hashmap![
         "KELVIN" => kelvin_map,
         "CELSIUS" => celsius_map,
@@ -220,12 +233,22 @@ fn main() {
         "GALLONS" => gallons_map
     ];
 
-    if opts.verbose {
+    // useful in debugging
+    if verbose {
 	    println!("Value for uom_in: {}", args_ctx["uom_in"]);
 	    println!("Value for uom_target: {}",args_ctx["uom_target"]);
 	    println!("Value for control: {}", args_ctx["control"]);
 	    println!("Value for answer: {}", args_ctx["answer"]);
     }
+
+    // All of the work is done here,
+    //  Probe the cvnmap hashmap for the provided "uom_in" value, if not found
+    //  return "invalid", if found hash into the value returned (which is a hashmap)
+    //  with the provided "uom_target" as a key. If the key is found, apply the "control"
+    //  argument to the dereferenced function pointer and compare the delivered f64 value 
+    //  with the provided "answer" if they are approximately equal return correct otherwise
+    //  return incorrect. If either "control" or "answer" do not parse to f64 types, return
+    //  invalid
     match cvnmap.get(&*args_ctx["uom_in"]){
         Some(value) => {
             match value.get(&*args_ctx["uom_target"]){

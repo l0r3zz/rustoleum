@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 extern crate argparse;
+extern crate float_cmp;
 use argparse::{ArgumentParser, StoreTrue, Store};
 use rustoleum::*;
+use float_cmp::*;
 
 
 // macro to make hasmap initialization easy
@@ -259,7 +261,7 @@ fn main() {
                         Ok(result) => result,
                         Err(_err) => {println!("Answer: invalid");return() }
                     };
-                    if approx_eq(r(cntrf64), ansf64,2){
+                    if approx_eq!(f64,r(cntrf64), ansf64,(0.5,2)){
                     println!("Answer: {}","correct");
                     }else {
                     println!("Answer: {}","incorrect");

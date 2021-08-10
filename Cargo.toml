@@ -8,6 +8,7 @@ name = "rustoleum"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+float-cmp = "0.9.0"
 argparse = "0.2.2"
 [dev-dependencies]
 pretty_assertions = "0.7.2"

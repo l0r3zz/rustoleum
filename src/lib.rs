@@ -1,14 +1,14 @@
-
+extern crate float_cmp;
 //#[derive(debug)]
 
 // Function to asertain approximate equality of f64 numbers up to specified
 // decimal places
-pub fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
-    let factor = 10.0f64.powi(decimal_places as i32);
-    let a = (a * factor).trunc();
-    let b = (b * factor).trunc();
-    a == b
-}
+//pub fn approx_eq(a: f64, b: f64, decimal_places: u8) -> bool {
+//    let factor = 10.0f64.powi(decimal_places as i32);
+//    let a = (a * factor).trunc();
+//    let b = (b * factor).trunc();
+//    a == b
+//}
 
 // List of conversion functions for all supported metrics
 
@@ -40,7 +40,7 @@ pub fn cel_ran(n:f64) -> f64 {
 }
 //fahrenheit to kelvin conversion function
 pub fn fah_kel(n:f64) -> f64 {
-    (n - 32.0)* 5.0/9.0 + 273.15
+    (n - 32.0)* 0.5555555 + 273.15
 }
 //fahrenheit to celsius conversion function
 pub fn fah_cel(n:f64) -> f64 {
@@ -193,6 +193,7 @@ pub fn gal_cups(n:f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use float_cmp::*;
      // function pointer type
     type Measureop = fn(f64) -> f64;
 
@@ -203,7 +204,7 @@ mod tests {
 
     #[test]
     fn test_approx_eq() {
-        assert!( approx_eq(9.0/11.0, 0.8182,2));
+        assert!( approx_eq!(f64,9.0/11.0, 0.8182,(0.05,2)));
     }
 
     #[test]
@@ -214,8 +215,8 @@ mod tests {
         let f2c: Measureop = fah_cel;
         let res_fn = fah_cel(f);
         let res_fnp = f2c(f);
-        assert!(approx_eq(res_fn, c,2));
-        assert!(approx_eq(res_fnp, c,2));
+        assert!(approx_eq!(f64,res_fn, c,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, c,(0.05,2)));
     }
     #[test]
     // test Fahrenheit to kelvin functions
@@ -225,18 +226,84 @@ mod tests {
         let f2k: Measureop = fah_kel;
         let res_fn = fah_kel(f);
         let res_fnp = f2k(f);
-        assert!(approx_eq(res_fn, k,2));
-        assert!(approx_eq(res_fnp, k,2));
+        assert!(approx_eq!(f64,res_fn, k,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, k,(0.05,2)));
     }
     #[test]
     // test Fahrenheit to Rankine functions
     fn test_fah_ran() {
-        let f = 70.0;
+        let f = 70.00;
         let r = 529.67;
         let f2r: Measureop = fah_ran;
         let res_fn = fah_ran(f);
         let res_fnp = f2r(f);
-        assert!(approx_eq(res_fn, r,3));
-        assert!(approx_eq(res_fnp, r,3));
+        assert!(approx_eq!(f64,res_fn, r,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, r,(0.05,2)));
+    }
+    #[test]
+    // test Celsius to Kelvin functions
+    fn test_cel_kel() {
+        let c = 70.0;
+        let k = 343.15;
+        let c2k: Measureop = cel_kel;
+        let res_fn = cel_kel(c);
+        let res_fnp = c2k(c);
+        assert!(approx_eq!(f64,res_fn, k,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, k,(0.05,2)));
+    }
+    #[test]
+    // test Celsius to Fahrenheit functions
+    fn test_cel_fah() {
+        let c = 70.0;
+        let f = 158.0;
+        let c2f: Measureop = cel_fah;
+        let res_fn = cel_fah(c);
+        let res_fnp = c2f(c);
+        assert!(approx_eq!(f64,res_fn, f,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, f,(0.05,2)));
+    }
+    #[test]
+    // test Celsius to Rankine functions
+    fn test_cel_ran() {
+        let c = 70.0;
+        let r = 617.67;
+        let c2r: Measureop = cel_ran;
+        let res_fn = cel_ran(c);
+        let res_fnp = c2r(c);
+        assert!(approx_eq!(f64,res_fn, r,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, r,(0.05,2)));
+    }
+    #[test]
+    // test Kelvin to Celsius functions
+    fn test_kel_cel() {
+        let k = 70.0;
+        let c = -203.15;
+        let k2c: Measureop = kel_cel;
+        let res_fn = kel_cel(k);
+        let res_fnp = k2c(k);
+        assert!(approx_eq!(f64,res_fn, c,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, c,(0.05,2)));
+    }
+    #[test]
+    // test Kelvin to Fahrenheit functions
+    fn test_kel_fah() {
+        let k = 70.0;
+        let f = -333.67;
+        let k2f: Measureop = kel_fah;
+        let res_fn = kel_fah(k);
+        let res_fnp = k2f(k);
+        assert!(approx_eq!(f64,res_fn, f,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, f,(0.05,2)));
+    }
+    #[test]
+    // test Kelvin to Rankine functions
+    fn test_kel_ran() {
+        let k = 70.0;
+        let r = 126.0;
+        let k2r: Measureop = kel_ran;
+        let res_fn = kel_ran(k);
+        let res_fnp = k2r(k);
+        assert!(approx_eq!(f64,res_fn, r,(0.05,2)));
+        assert!(approx_eq!(f64,res_fnp, r,(0.05,2)));
     }
 }

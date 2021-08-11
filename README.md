@@ -26,7 +26,7 @@ l0r3zz@tarnover$ docker pull  l0r3zz/rustoleum:latest
 USAGE:
     rustoleum <input units> <target units> <control> <answer>
     
-l0r3zz@tarnover$ ddocker run  l0r3zz/rustoleum:latest rustoleum celsius kelvin 70.0 343.15 
+l0r3zz@tarnover$ docker run  l0r3zz/rustoleum:latest rustoleum celsius kelvin 70.0 343.15 
 Answer: correct
 ```
 Where:

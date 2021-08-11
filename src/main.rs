@@ -1,7 +1,7 @@
 use std::collections::HashMap;
-extern crate argparse;
+use std::process::exit;
+use std::env;
 extern crate float_cmp;
-use argparse::{ArgumentParser, StoreTrue, Store};
 use rustoleum::*;
 use float_cmp::*;
 
@@ -20,38 +20,22 @@ type Measureop = fn(f64) -> f64;
 
 fn main() {
 
-    let mut verbose = false;
-    let mut uom_in = "".to_string();
-    let mut uom_target = "".to_string();
-    let mut control = "".to_string();
-    let mut answer = "".to_string();
-    {  // this block limits scope of borrows by ap.refer() method
-        let mut ap = ArgumentParser::new();
-        ap.set_description("learn measure conversions tool.");
-        ap.refer(&mut control)
-            .add_argument("control", Store,
-            "input value to convert");
-        ap.refer(&mut answer)
-            .add_argument("answer", Store,
-            "student provided answer to evaluate");
-        ap.refer(&mut verbose)
-            .add_option(&["-v", "--verbose"], StoreTrue,
-            "Be verbose");
-        ap.refer(&mut uom_in)
-            .add_option(&["-i","--uom_in"], Store,
-            "unit of measure to be converted").required();
-        ap.refer(&mut uom_target)
-            .add_option(&["-t","--target"], Store,
-            "unit of measure to of the answer").required();
-        ap.parse_args_or_exit();
-    }
+    let args: Vec<String> = env::args().collect();
+        if args.len() != 5 {
+            println!("{} : USAGE <input units> <target units> <control> <answer>",&args[0]);
+            exit(-1);
+        }
 
+    let  uom_in = &args[1];
+    let  uom_target = &args[2];
+    let  control = &args[3];
+    let  answer = &args[4];
     // create a hashmap to contain the argument values
     let args_ctx = hashmap![
         "uom_in" => uom_in.to_ascii_uppercase(),
         "uom_target" => uom_target.to_ascii_uppercase(),
-        "control" => control,
-        "answer" => answer
+        "control" => control.to_string(),
+        "answer" => answer.to_string()
     ];
 
 
@@ -142,7 +126,7 @@ fn main() {
     //gallons to cups conversion function
     let g2cps: Measureop = gal_cups;
 
-    // These are the second level hashmaps that are values 
+    // These are the second level hashmaps that are values
     // for the keys of the first level hashmaps.
     // The first level hasmap keys are the "uom_in" value
     let kelvin_map = hashmap![
@@ -234,12 +218,12 @@ fn main() {
     ];
 
     // useful in debugging
-    if verbose {
-	    println!("Value for uom_in: {}", args_ctx["uom_in"]);
-	    println!("Value for uom_target: {}",args_ctx["uom_target"]);
-	    println!("Value for control: {}", args_ctx["control"]);
-	    println!("Value for answer: {}", args_ctx["answer"]);
-    }
+//    if true {
+//	    println!("Value for uom_in: {}", args_ctx["uom_in"]);
+//	    println!("Value for uom_target: {}",args_ctx["uom_target"]);
+//	    println!("Value for control: {}", args_ctx["control"]);
+//	    println!("Value for answer: {}", args_ctx["answer"]);
+//    }
 
     // All of the work is done here,
     //  Probe the cvnmap hashmap for the provided "uom_in" value, if not found

@@ -20,7 +20,7 @@ pub fn kel_cel(n:f64) -> f64 {
 }
 // kelvin to fahrenheit conversion function
 pub fn kel_fah(n:f64) -> f64 {
-    (n - 273.15) * 9.0/5.0 + 32.0
+    (n - 273.15) * (9.0/5.0) + 32.0
 }
 //kelvin to rankine conversion function
 pub fn kel_ran(n:f64) -> f64 {
@@ -287,13 +287,13 @@ mod tests {
     #[test]
     // test Kelvin to Fahrenheit functions
     fn test_kel_fah() {
-        let k = 70.0;
-        let f = -333.67;
+        let k = 100.0;
+        let f = -279.67;
         let k2f: Measureop = kel_fah;
         let res_fn = kel_fah(k);
         let res_fnp = k2f(k);
-        assert!(approx_eq!(f64,res_fn, f,(0.05,2)));
-        assert!(approx_eq!(f64,res_fnp, f,(0.05,2)));
+        assert!(approx_eq!(f64,res_fn, f,(0.005,2)));
+        assert!(approx_eq!(f64,res_fnp, f,(0.005,2)));
     }
     #[test]
     // test Kelvin to Rankine functions

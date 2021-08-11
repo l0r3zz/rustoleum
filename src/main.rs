@@ -245,7 +245,7 @@ fn main() {
                         Ok(result) => result,
                         Err(_err) => {println!("Answer: invalid");return() }
                     };
-                    if approx_eq!(f64,r(cntrf64), ansf64,(0.5,2)){
+                    if approx_eq!(f64,r(cntrf64), ansf64,(0.05,2)){
                     println!("Answer: {}","correct");
                     }else {
                     println!("Answer: {}","incorrect");

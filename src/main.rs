@@ -15,9 +15,6 @@ macro_rules! hashmap {
     }}
 }
 
- // function pointer type
-type Measureop = fn(f64) -> f64;
-
 fn main() {
 
     let args: Vec<String> = env::args().collect();
@@ -25,7 +22,6 @@ fn main() {
             println!("{} : USAGE <input units> <target units> <control> <answer>",&args[0]);
             exit(-1);
         }
-
     let  uom_in = &args[1];
     let  uom_target = &args[2];
     let  control = &args[3];
@@ -38,167 +34,80 @@ fn main() {
         "answer" => answer.to_string()
     ];
 
-
-    // Created function pointers which will go into the second level hashmaps
-
-    // kelvin to celsius conversion function
-    let k2c: Measureop = kel_cel;
-    // kelvin to fahrenheit conversion function
-    let k2f: Measureop = kel_fah;
-    //kelvin to rankine conversion function
-    let k2r: Measureop = kel_ran;
-    //celsius to kelvin conversion function
-    let c2k: Measureop = cel_kel;
-    //celsius to fahrenheit conversion function
-    let c2f: Measureop = cel_fah;
-    //celsius to rankine conversion function
-    let c2r: Measureop = cel_ran;
-    //fahrenheit to rankine conversion function
-    let f2r: Measureop = fah_ran;
-    //fahrenheit to celsius conversion function
-    let f2c: Measureop = fah_cel;
-    //fahrenheit to kelvin conversion function
-    let f2k: Measureop = fah_kel;
-    //rankin to fahrenheit conversion function
-    let r2f: Measureop = ran_fah;
-    //rankin to celsius conversion function
-    let r2c: Measureop = ran_cel;
-    //rankin to kelvin conversion function
-    let r2k: Measureop = ran_kel;
-    //liter to tablespoon conversion function
-    let l2t: Measureop = lit_tab;
-    //liter to cubic-inches conversion function
-    let l2ci: Measureop = lit_ci;
-    //liter to cups conversion function
-    let l2cps: Measureop = lit_cups;
-    //liter to cubic-feet conversion function
-    let l2cf: Measureop = lit_cf;
-    //liter to gallons conversion function
-    let l2g: Measureop = lit_gal;
-    //tablespoons to liters conversion function
-    let t2l: Measureop = tab_lit;
-    //tablespoons to cubic-inches conversion function
-    let t2ci: Measureop = tab_ci;
-    //tablespoons to cups conversion function
-    let t2cps: Measureop = tab_cups;
-    //tablespoons to cubic-feet conversion function
-    let t2cf: Measureop = tab_cf;
-    //tablespoons to gallons conversion function
-    let t2g: Measureop = tab_gal;
-    //cubic-inches to liters conversion function
-    let ci2l: Measureop = ci_lit;
-    //cubic-inches to tablespoons conversion function
-    let ci2t: Measureop = ci_tab;
-    //cubic-inches to cups conversion function
-    let ci2cps: Measureop = ci_cups;
-    //cubic-inches to cubic-feet conversion function
-    let ci2cf: Measureop = ci_cf;
-    //cubic-inches to gallons conversion function
-    let ci2g: Measureop = ci_gal;
-    //cubic-feet to liters conversion function
-    let cf2l: Measureop = cf_lit;
-    //cubic-feet to tablespoons conversion function
-    let cf2t: Measureop = cf_tab;
-    //cubic-feet to cups conversion function
-    let cf2cps: Measureop = cf_cups;
-    //cubic-feet to cubic-inches conversion function
-    let cf2ci: Measureop = cf_ci;
-    //cubic-feet to gallons conversion function
-    let cf2g: Measureop = cf_gal;
-    //cups to liters conversion function
-    let cps2l: Measureop = cups_lit;
-    //cups to cubic-inches conversion function
-    let cps2ci: Measureop = cups_ci;
-    //cups to tablespoons conversion function
-    let cps2t: Measureop = cups_tab;
-    //cups to cubic-feet conversion function
-    let cps2cf: Measureop = cups_cf;
-    //cups to gallons conversion function
-    let cps2g: Measureop = cups_gal;
-    //gallons to liters conversion function
-    let g2l: Measureop = gal_lit;
-    //gallons to cubic-inches conversion function
-    let g2ci: Measureop = gal_ci;
-    //gallons to tablespoons conversion function
-    let g2t: Measureop = gal_tab;
-    //gallons to cubic-feet conversion function
-    let g2cf: Measureop = gal_cf;
-    //gallons to cups conversion function
-    let g2cps: Measureop = gal_cups;
-
     // These are the second level hashmaps that are values
     // for the keys of the first level hashmaps.
     // The first level hasmap keys are the "uom_in" value
+
     let kelvin_map = hashmap![
-        "CELSIUS" => k2c,
-        "FAHRENHEIT" => k2f,
-        "RANKINE" => k2r
+        "CELSIUS" => K2C,
+        "FAHRENHEIT" => K2F,
+        "RANKINE" => K2R
     ];
 
     let celsius_map = hashmap![
-        "KELVIN" => c2k,
-        "FAHRENHEIT" => c2f,
-        "RANKINE" => c2r
+        "KELVIN" => C2K,
+        "FAHRENHEIT" => C2K,
+        "RANKINE" => C2R
     ];
 
     let fahrenheit_map = hashmap![
-        "CELSIUS" => f2c,
-        "KELVIN" => f2k,
-        "RANKINE" => f2r
+        "CELSIUS" => F2C,
+        "KELVIN" => F2K,
+        "RANKINE" => F2R
     ];
 
     let rankine_map = hashmap![
-        "CELSIUS" => r2c,
-        "FAHRENHEIT" => r2f,
-        "KELVIN" => r2k
+        "CELSIUS" => R2C,
+        "FAHRENHEIT" => R2F,
+        "KELVIN" => R2K
     ];
 
     let liters_map = hashmap![
-        "TABLESPOONS" => l2t,
-        "CUBIC-INCHES" => l2ci,
-        "CUBIC-FEET" => l2cf,
-        "CUPS" => l2cps,
-        "GALLONS" => l2g
+        "TABLESPOONS" => L2T,
+        "CUBIC-INCHES" => L2CI,
+        "CUBIC-FEET" => L2CF,
+        "CUPS" => L2CPS,
+        "GALLONS" => L2G
     ];
 
     let tablespoons_map = hashmap![
-        "LITERS" => t2l,
-        "CUBIC-INCHES" => t2ci,
-        "CUBIC-FEET" => t2cf,
-        "CUPS" => t2cps,
-        "GALLONS" => t2g
+        "LITERS" => T2L,
+        "CUBIC-INCHES" => T2CI,
+        "CUBIC-FEET" => T2CF,
+        "CUPS" => T2CPS,
+        "GALLONS" => T2G
     ];
 
     let cubic_feet_map = hashmap![
-        "LITERS" => cf2l,
-        "CUBIC-INCHES" => cf2ci,
-        "TABLESPOONS" => cf2t,
-        "CUPS" => cf2cps,
-        "GALLONS" => cf2g
+        "LITERS" => CF2L,
+        "CUBIC-INCHES" => CF2CI,
+        "TABLESPOONS" => CF2T,
+        "CUPS" => CF2CPS,
+        "GALLONS" => CF2G
     ];
 
     let cubic_inches_map = hashmap![
-        "LITERS" => ci2l,
-        "CUBIC-FEET" => ci2cf,
-        "TABLESPOONS" => ci2t,
-        "CUPS" => ci2cps,
-        "GALLONS" => ci2g
+        "LITERS" => CI2L,
+        "CUBIC-FEET" => CI2CF,
+        "TABLESPOONS" => CI2T,
+        "CUPS" => CI2CPS,
+        "GALLONS" => CI2G
     ];
 
     let cups_map = hashmap![
-        "LITERS" => cps2l,
-        "CUBIC-INCHES" => cps2ci,
-        "TABLESPOONS" => cps2t,
-        "CUBIC-FEET" => cps2cf,
-        "GALLONS" => cps2g
+        "LITERS" => CPS2L,
+        "CUBIC-INCHES" => CPS2CI,
+        "TABLESPOONS" => CPS2T,
+        "CUBIC-FEET" => CPS2CF,
+        "GALLONS" => CPS2G
     ];
 
     let gallons_map = hashmap![
-        "LITERS" => g2l,
-        "CUBIC-INCHES" => g2ci,
-        "TABLESPOONS" => g2t,
-        "CUBIC-FEET" => g2cf,
-        "CUPS" => g2cps
+        "LITERS" => G2L,
+        "CUBIC-INCHES" => G2CI,
+        "TABLESPOONS" => G2T,
+        "CUBIC-FEET" => G2CF,
+        "CUPS" => G2CPS
     ];
 
     // Main conversion dispatch table
@@ -217,14 +126,6 @@ fn main() {
         "GALLONS" => gallons_map
     ];
 
-    // useful in debugging
-//    if true {
-//	    println!("Value for uom_in: {}", args_ctx["uom_in"]);
-//	    println!("Value for uom_target: {}",args_ctx["uom_target"]);
-//	    println!("Value for control: {}", args_ctx["control"]);
-//	    println!("Value for answer: {}", args_ctx["answer"]);
-//    }
-
     // All of the work is done here,
     //  Probe the cvnmap hashmap for the provided "uom_in" value, if not found
     //  return "invalid", if found hash into the value returned (which is a hashmap)
@@ -233,6 +134,7 @@ fn main() {
     //  with the provided "answer" if they are approximately equal return correct otherwise
     //  return incorrect. If either "control" or "answer" do not parse to f64 types, return
     //  invalid
+
     match cvnmap.get(&*args_ctx["uom_in"]){
         Some(value) => {
             match value.get(&*args_ctx["uom_target"]){

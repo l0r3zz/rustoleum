@@ -66,14 +66,14 @@ pub const LITERS_TO_GALLONS: f64 = 0.2641;
 pub const TABLESPOONS_TO_LITERS: f64 = 0.0147;
 pub const TABLESPOONS_TO_CUBIC_INCHES: f64 = 0.902;
 pub const TABLESPOONS_TO_CUPS: f64 = 0.062;
-pub const TABLESPOONS_TO_CUBIC_FEET: f64 = 0.00052219;
-pub const TABLESPOONS_TO_GALLONS: f64 = 0.00390625;
+pub const TABLESPOONS_TO_CUBIC_FEET: f64 = 0.000_522_19;
+pub const TABLESPOONS_TO_GALLONS: f64 = 0.003_906_25;
 pub const CUBIC_INCHES_TO_LITERS: f64 = 0.0163;
 pub const CUBIC_INCHES_TO_TABLESPOONS: f64 = 1.10823;
 pub const CUBIC_INCHES_TO_CUPS: f64 = 0.06926;
-pub const CUBIC_INCHES_TO_CUBIC_FEET: f64 = 0.000578704;
-pub const CUBIC_INCHES_TO_GALLONS: f64 = 0.004329;
-pub const CUPS_TO_LITERS: f64 = 0.236588;
+pub const CUBIC_INCHES_TO_CUBIC_FEET: f64 = 0.000_578_704;
+pub const CUBIC_INCHES_TO_GALLONS: f64 = 0.004_329;
+pub const CUPS_TO_LITERS: f64 = 0.236_588;
 pub const CUPS_TO_CUBIC_INCHES: f64 = 14.4375;
 pub const CUPS_TO_TABLESPOONS: f64 = 16.0;
 pub const CUPS_TO_CUBIC_FEET: f64 = 0.00835;
@@ -112,8 +112,8 @@ pub enum UnitParseError {
 impl fmt::Display for UnitParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            UnitParseError::UnknownUnit(unit) => {
-                write!(f, "Unknown unit: '{}'", unit)
+            Self::UnknownUnit(unit) => {
+                write!(f, "Unknown unit: '{unit}'")
             }
         }
     }
@@ -185,16 +185,16 @@ impl FromStr for Unit {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_uppercase().as_str() {
-            "KELVIN" => Ok(Unit::Kelvin),
-            "CELSIUS" => Ok(Unit::Celsius),
-            "FAHRENHEIT" => Ok(Unit::Fahrenheit),
-            "RANKINE" => Ok(Unit::Rankine),
-            "LITERS" => Ok(Unit::Liters),
-            "TABLESPOONS" => Ok(Unit::Tablespoons),
-            "CUBIC-INCHES" | "CUBICINCHES" => Ok(Unit::CubicInches),
-            "CUPS" => Ok(Unit::Cups),
-            "CUBIC-FEET" | "CUBICFEET" => Ok(Unit::CubicFeet),
-            "GALLONS" => Ok(Unit::Gallons),
+            "KELVIN" => Ok(Self::Kelvin),
+            "CELSIUS" => Ok(Self::Celsius),
+            "FAHRENHEIT" => Ok(Self::Fahrenheit),
+            "RANKINE" => Ok(Self::Rankine),
+            "LITERS" => Ok(Self::Liters),
+            "TABLESPOONS" => Ok(Self::Tablespoons),
+            "CUBIC-INCHES" | "CUBICINCHES" => Ok(Self::CubicInches),
+            "CUPS" => Ok(Self::Cups),
+            "CUBIC-FEET" | "CUBICFEET" => Ok(Self::CubicFeet),
+            "GALLONS" => Ok(Self::Gallons),
             _ => Err(UnitParseError::UnknownUnit(s.to_string())),
         }
     }
@@ -238,6 +238,7 @@ impl FromStr for Unit {
 /// let result = convert(Unit::Celsius, Unit::Liters, 100.0);
 /// assert_eq!(result, None);
 /// ```
+#[must_use]
 pub fn convert(from: Unit, to: Unit, value: f64) -> Option<f64> {
     if from == to {
         return Some(value);
@@ -314,6 +315,7 @@ pub fn convert(from: Unit, to: Unit, value: f64) -> Option<f64> {
 /// let celsius = kel_cel(273.15);
 /// assert_eq!(celsius, 0.0);
 /// ```
+#[must_use]
 pub fn kel_cel(n: f64) -> f64 {
     n - ABSOLUTE_ZERO_CELSIUS
 }
@@ -327,6 +329,7 @@ pub fn kel_cel(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Fahrenheit
+#[must_use]
 pub fn kel_fah(n: f64) -> f64 {
     (n - ABSOLUTE_ZERO_CELSIUS) * CELSIUS_TO_FAHRENHEIT_RATIO + FAHRENHEIT_FREEZING
 }
@@ -340,6 +343,7 @@ pub fn kel_fah(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Rankine
+#[must_use]
 pub fn kel_ran(n: f64) -> f64 {
     n * KELVIN_TO_RANKINE_RATIO
 }
@@ -362,6 +366,7 @@ pub fn kel_ran(n: f64) -> f64 {
 /// let kelvin = cel_kel(0.0);
 /// assert_eq!(kelvin, 273.15);
 /// ```
+#[must_use]
 pub fn cel_kel(n: f64) -> f64 {
     n + ABSOLUTE_ZERO_CELSIUS
 }
@@ -384,6 +389,7 @@ pub fn cel_kel(n: f64) -> f64 {
 /// let fahrenheit = cel_fah(0.0);
 /// assert_eq!(fahrenheit, 32.0);
 /// ```
+#[must_use]
 pub fn cel_fah(n: f64) -> f64 {
     (n * CELSIUS_TO_FAHRENHEIT_RATIO) + FAHRENHEIT_FREEZING
 }
@@ -397,6 +403,7 @@ pub fn cel_fah(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Rankine
+#[must_use]
 pub fn cel_ran(n: f64) -> f64 {
     (n * CELSIUS_TO_FAHRENHEIT_RATIO) + CELSIUS_TO_RANKINE_OFFSET
 }
@@ -410,6 +417,7 @@ pub fn cel_ran(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Kelvin
+#[must_use]
 pub fn fah_kel(n: f64) -> f64 {
     (n - FAHRENHEIT_FREEZING) * FAHRENHEIT_TO_CELSIUS_RATIO + ABSOLUTE_ZERO_CELSIUS
 }
@@ -432,6 +440,7 @@ pub fn fah_kel(n: f64) -> f64 {
 /// let celsius = fah_cel(32.0);
 /// assert_eq!(celsius, 0.0);
 /// ```
+#[must_use]
 pub fn fah_cel(n: f64) -> f64 {
     (n - FAHRENHEIT_FREEZING) * FAHRENHEIT_TO_CELSIUS_RATIO
 }
@@ -445,6 +454,7 @@ pub fn fah_cel(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Rankine
+#[must_use]
 pub fn fah_ran(n: f64) -> f64 {
     n + FAHRENHEIT_TO_RANKINE_OFFSET
 }
@@ -458,6 +468,7 @@ pub fn fah_ran(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Kelvin
+#[must_use]
 pub fn ran_kel(n: f64) -> f64 {
     n * RANKINE_TO_KELVIN_RATIO
 }
@@ -471,6 +482,7 @@ pub fn ran_kel(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Celsius
+#[must_use]
 pub fn ran_cel(n: f64) -> f64 {
     (n * RANKINE_TO_KELVIN_RATIO) - ABSOLUTE_ZERO_CELSIUS
 }
@@ -484,6 +496,7 @@ pub fn ran_cel(n: f64) -> f64 {
 /// # Returns
 ///
 /// Temperature in Fahrenheit
+#[must_use]
 pub fn ran_fah(n: f64) -> f64 {
     n - FAHRENHEIT_TO_RANKINE_OFFSET
 }
@@ -500,6 +513,7 @@ pub fn ran_fah(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in tablespoons
+#[must_use]
 pub fn lit_tab(n: f64) -> f64 {
     n * LITERS_TO_TABLESPOONS
 }
@@ -513,6 +527,7 @@ pub fn lit_tab(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic inches
+#[must_use]
 pub fn lit_ci(n: f64) -> f64 {
     n * LITERS_TO_CUBIC_INCHES
 }
@@ -526,6 +541,7 @@ pub fn lit_ci(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cups
+#[must_use]
 pub fn lit_cups(n: f64) -> f64 {
     n * LITERS_TO_CUPS
 }
@@ -539,6 +555,7 @@ pub fn lit_cups(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic feet
+#[must_use]
 pub fn lit_cf(n: f64) -> f64 {
     n * LITERS_TO_CUBIC_FEET
 }
@@ -552,6 +569,7 @@ pub fn lit_cf(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in gallons
+#[must_use]
 pub fn lit_gal(n: f64) -> f64 {
     n * LITERS_TO_GALLONS
 }
@@ -565,6 +583,7 @@ pub fn lit_gal(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in liters
+#[must_use]
 pub fn tab_lit(n: f64) -> f64 {
     n * TABLESPOONS_TO_LITERS
 }
@@ -578,6 +597,7 @@ pub fn tab_lit(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic inches
+#[must_use]
 pub fn tab_ci(n: f64) -> f64 {
     n * TABLESPOONS_TO_CUBIC_INCHES
 }
@@ -591,6 +611,7 @@ pub fn tab_ci(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cups
+#[must_use]
 pub fn tab_cups(n: f64) -> f64 {
     n * TABLESPOONS_TO_CUPS
 }
@@ -604,6 +625,7 @@ pub fn tab_cups(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic feet
+#[must_use]
 pub fn tab_cf(n: f64) -> f64 {
     n * TABLESPOONS_TO_CUBIC_FEET
 }
@@ -617,6 +639,7 @@ pub fn tab_cf(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in gallons
+#[must_use]
 pub fn tab_gal(n: f64) -> f64 {
     n * TABLESPOONS_TO_GALLONS
 }
@@ -630,6 +653,7 @@ pub fn tab_gal(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in liters
+#[must_use]
 pub fn ci_lit(n: f64) -> f64 {
     n * CUBIC_INCHES_TO_LITERS
 }
@@ -643,6 +667,7 @@ pub fn ci_lit(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in tablespoons
+#[must_use]
 pub fn ci_tab(n: f64) -> f64 {
     n * CUBIC_INCHES_TO_TABLESPOONS
 }
@@ -656,6 +681,7 @@ pub fn ci_tab(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cups
+#[must_use]
 pub fn ci_cups(n: f64) -> f64 {
     n * CUBIC_INCHES_TO_CUPS
 }
@@ -669,6 +695,7 @@ pub fn ci_cups(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic feet
+#[must_use]
 pub fn ci_cf(n: f64) -> f64 {
     n * CUBIC_INCHES_TO_CUBIC_FEET
 }
@@ -682,6 +709,7 @@ pub fn ci_cf(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in gallons
+#[must_use]
 pub fn ci_gal(n: f64) -> f64 {
     n * CUBIC_INCHES_TO_GALLONS
 }
@@ -695,6 +723,7 @@ pub fn ci_gal(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in liters
+#[must_use]
 pub fn cups_lit(n: f64) -> f64 {
     n * CUPS_TO_LITERS
 }
@@ -708,6 +737,7 @@ pub fn cups_lit(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic inches
+#[must_use]
 pub fn cups_ci(n: f64) -> f64 {
     n * CUPS_TO_CUBIC_INCHES
 }
@@ -721,6 +751,7 @@ pub fn cups_ci(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in tablespoons
+#[must_use]
 pub fn cups_tab(n: f64) -> f64 {
     n * CUPS_TO_TABLESPOONS
 }
@@ -734,6 +765,7 @@ pub fn cups_tab(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic feet
+#[must_use]
 pub fn cups_cf(n: f64) -> f64 {
     n * CUPS_TO_CUBIC_FEET
 }
@@ -747,6 +779,7 @@ pub fn cups_cf(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in gallons
+#[must_use]
 pub fn cups_gal(n: f64) -> f64 {
     n * CUPS_TO_GALLONS
 }
@@ -760,6 +793,7 @@ pub fn cups_gal(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in liters
+#[must_use]
 pub fn cf_lit(n: f64) -> f64 {
     n * CUBIC_FEET_TO_LITERS
 }
@@ -773,6 +807,7 @@ pub fn cf_lit(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic inches
+#[must_use]
 pub fn cf_ci(n: f64) -> f64 {
     n * CUBIC_FEET_TO_CUBIC_INCHES
 }
@@ -786,6 +821,7 @@ pub fn cf_ci(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in tablespoons
+#[must_use]
 pub fn cf_tab(n: f64) -> f64 {
     n * CUBIC_FEET_TO_TABLESPOONS
 }
@@ -799,6 +835,7 @@ pub fn cf_tab(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cups
+#[must_use]
 pub fn cf_cups(n: f64) -> f64 {
     n * CUBIC_FEET_TO_CUPS
 }
@@ -812,6 +849,7 @@ pub fn cf_cups(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in gallons
+#[must_use]
 pub fn cf_gal(n: f64) -> f64 {
     n * CUBIC_FEET_TO_GALLONS
 }
@@ -825,6 +863,7 @@ pub fn cf_gal(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in liters
+#[must_use]
 pub fn gal_lit(n: f64) -> f64 {
     n * GALLONS_TO_LITERS
 }
@@ -838,6 +877,7 @@ pub fn gal_lit(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic inches
+#[must_use]
 pub fn gal_ci(n: f64) -> f64 {
     n * GALLONS_TO_CUBIC_INCHES
 }
@@ -851,6 +891,7 @@ pub fn gal_ci(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in tablespoons
+#[must_use]
 pub fn gal_tab(n: f64) -> f64 {
     n * GALLONS_TO_TABLESPOONS
 }
@@ -864,6 +905,7 @@ pub fn gal_tab(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cubic feet
+#[must_use]
 pub fn gal_cf(n: f64) -> f64 {
     n * GALLONS_TO_CUBIC_FEET
 }
@@ -877,6 +919,7 @@ pub fn gal_cf(n: f64) -> f64 {
 /// # Returns
 ///
 /// Volume in cups
+#[must_use]
 pub fn gal_cups(n: f64) -> f64 {
     n * GALLONS_TO_CUPS
 }
